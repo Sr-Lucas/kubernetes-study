@@ -49,23 +49,25 @@ spec:
             port: 3000
           periodSeconds: 5
           failureThreshold: 1
+        
+        envFrom:
+        - configMapRef:
+            name: jsserver-env
+        
+        volumeMounts:
+        - name: jsserver-volume
+          mountPath: /mnt/data
+          
+        - name: config
+          mountPath: /mnt/config
+          readOnly: true
+        
+      volumes:
+      - name: jsserver-volume
+        persistentVolumeClaim:
+          claimName: jsserver-pvc
 
-          envFrom:
-          - configMapRef:
-              name: jsserver-env
-
-      # Another way to use configMap
-      #
-      # - name: jsserver
-      #   image: srlucas/hello-js:v1.1
-      #   env:
-      #   - name: NAME
-      #     valueFrom:
-      #       configMapKeyRef:
-      #         name: jsserver-env
-      #         key: NAME
-      #   - name: AGE
-      #     valueFrom:
-      #       configMapKeyRef:
-      #         name: jsserver-env
-      #         key: AGE
+      - name: config
+        configMap:
+          name: jsserver-env
+        
