@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jsserver-env
+  labels:
+    app: jsserver
+    tier: backend
+data:
+  APP_NAME: "KUBERNETES FULL CYCLE"
+  APP_VERSION: "21"

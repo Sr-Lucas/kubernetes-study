@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jsserver
+  labels:
+    app: jsserver
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jsserver
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: jsserver
+        tier: backend
+    spec:
+      containers:
+      - name: jsserver
+        image: srlucas/hello-js:v1.4
+        
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "100m"
+          limits:
+            memory: "50Mi"
+            cpu: "200m"
+
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 3
+          failureThreshold: 10
+
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 3
+          failureThreshold: 1
+
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 5
+          failureThreshold: 1
+
+          envFrom:
+          - configMapRef:
+              name: jsserver-env
+
+      # Another way to use configMap
+      #
+      # - name: jsserver
+      #   image: srlucas/hello-js:v1.1
+      #   env:
+      #   - name: NAME
+      #     valueFrom:
+      #       configMapKeyRef:
+      #         name: jsserver-env
+      #         key: NAME
+      #   - name: AGE
+      #     valueFrom:
+      #       configMapKeyRef:
+      #         name: jsserver-env
+      #         key: AGE

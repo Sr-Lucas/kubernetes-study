@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "jsserver"
+  labels:
+    app: "jsserver"
+    tier: "backend"
+spec:
+  containers:
+    - name: jsserver
+      image: "srlucas/hello-js:v1.1"
